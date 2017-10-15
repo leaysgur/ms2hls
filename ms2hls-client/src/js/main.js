@@ -21,7 +21,7 @@ emitter
       const payload = new FormData();
       payload.append('webm', blob, `${Date.now()}.webm`);
 
-      fetch(`${apiUrl}/chunks`, {
+      fetch(`${apiUrl}/chunks/${liveId}`, {
         method: 'post',
         body: payload,
       });
@@ -30,7 +30,7 @@ emitter
     recorder.start();
 
     liveId = uuid();
-    fetch(`${apiUrl}/initialize?id=${liveId}`);
+    fetch(`${apiUrl}/initialize/${liveId}`);
   })
   .every(4, time => {
     console.log('TODO: send chunk', time, liveId);
