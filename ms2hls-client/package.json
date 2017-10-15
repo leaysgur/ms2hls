@@ -1,0 +1,28 @@
+{
+  "name": "ms2hls-client",
+  "version": "1.0.0",
+  "description": "MediaStream to HLS via MediaRecorder and ffmpeg.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack-dev-server",
+    "build:js": "NODE_ENV=production webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leader22/ms2hls-client.git"
+  },
+  "keywords": [],
+  "author": "leader22",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/leader22/ms2hls-client/issues"
+  },
+  "homepage": "https://github.com/leader22/ms2hls-client#readme",
+  "devDependencies": {
+    "webpack": "^3.7.1",
+    "webpack-dev-server": "^2.9.1"
+  },
+  "dependencies": {
+    "timemitter": "^1.0.2"
+  }
+}
