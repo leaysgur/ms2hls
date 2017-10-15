@@ -1,31 +1,11 @@
-const path = require('path');
-const fs = require('fs');
-
-const fastify = require('fastify')();
-const fastifyMultipart = require('fastify-multipart');
-const cors = require('cors');
-const pump = require('pump');
-
-fastify.register(fastifyMultipart);
-fastify.use(cors());
-
-fastify.post('/api/chunks', (request, reply) => {
-  request.multipart(
-    (field, file, filename) => {
-      if (field !== 'webm') { return; }
-
-      const fileStream = fs.createWriteStream(path.join(__dirname, '..', 'chunks', filename));
-      pump(file, fileStream, err => {
-        if (err) { throw err; }
-      });
-    },
-    err => {
-      if (err) { throw err; }
-
-      reply.code(200).send();
-    }
-  );
+const fastify = require('fastify')({
+  logger: process.env.NODE_ENV !== 'production',
 });
+
+fastify.register(require('fastify-multipart'));
+fastify.use(require('cors')());
+
+fastify.register(require('./routes'), { prefix: '/api' });
 
 fastify.listen(process.env.PORT || 9999, err => {
   if (err) { throw err; }
