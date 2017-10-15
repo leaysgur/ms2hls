@@ -25,12 +25,12 @@ module.exports = function(request, reply) {
           .output(filePath.replace('.webm', '.ts'))
           .on('error', err => { throw err; })
           .run();
+
+        reply.code(200).send();
       });
     },
     err => {
       if (err) { throw err; }
-
-      reply.code(200).send();
     }
   );
 };
