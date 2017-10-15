@@ -1,17 +1,22 @@
 const uuid = require('uuid/v4');
 const Timemitter = require('timemitter').default;
 
+const { apiUrl } = require('./config');
+
 const [$vLocal, $rStart, $rStop] = document.querySelectorAll('button');
 const [$video] = document.querySelectorAll('video');
 
-const apiUrl = '//localhost:9999/api';
-
 let recorder = null;
-let liveId = '';
+let chunkCnt = 1;
 
+const liveId = uuid();
 const emitter = new Timemitter();
 
-$vLocal.onclick = () => {
+$vLocal.onclick = onClickLocalStream;
+$rStart.onclick = onClickRecordStart;
+$rStop.onclick = onClickRecordStop;
+
+function onClickLocalStream() {
   navigator.mediaDevices.getUserMedia({ video: true })
     .then(stream => {
       $video.srcObject = stream;
@@ -20,9 +25,9 @@ $vLocal.onclick = () => {
       $vLocal.disabled = true;
       $rStart.disabled = false;
     });
-};
+}
 
-$rStart.onclick = () => {
+function onClickRecordStart() {
   emitter
     .at(0, () => {
       recorder = new MediaRecorder($video.srcObject);
@@ -32,7 +37,9 @@ $rStart.onclick = () => {
         const blob = new Blob([ev.data], { type: recorder.mimeType });
 
         const payload = new FormData();
-        payload.append('webm', blob, `${Date.now()}.webm`);
+        payload.append('webm', blob, `${chunkCnt}.webm`);
+
+        chunkCnt++;
 
         fetch(`${apiUrl}/chunks/${liveId}`, {
           method: 'post',
@@ -42,7 +49,6 @@ $rStart.onclick = () => {
 
       recorder.start();
 
-      liveId = uuid();
       fetch(`${apiUrl}/initialize/${liveId}`);
 
       console.log('initialize', liveId);
@@ -57,16 +63,15 @@ $rStart.onclick = () => {
 
   $rStart.disabled = true;
   $rStop.disabled = false;
-};
+}
 
-$rStop.onclick = () => {
-  // send last one manually
+function onClickRecordStop() {
+  // send last chunk manually
   recorder.stop();
   emitter.destroy();
 
   fetch(`${apiUrl}/finalize/${liveId}`);
   console.log('finalize', liveId);
 
-  $rStart.disabled = false;
   $rStop.disabled = true;
-};
+}
