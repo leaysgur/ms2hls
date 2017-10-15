@@ -1,13 +1,11 @@
-const chunks = require('./chunks');
+const initializeRoute = require('./initialize');
+const chunksRoute = require('./chunks');
 
 module.exports = function(fastify, _opts, next) {
-  fastify.get('/initialize', (_request, reply) => {
-    reply.code(200).send();
-  });
+  fastify.get('/initialize/:liveId', initializeRoute);
+  fastify.post('/chunks/:liveId', chunksRoute);
 
-  fastify.post('/chunks', chunks);
-
-  fastify.get('/finalize', (_request, reply) => {
+  fastify.get('/finalize/:liveId', (_request, reply) => {
     reply.code(200).send();
   });
 
