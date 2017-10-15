@@ -1,7 +1,7 @@
 const uuid = require('uuid/v4');
 const Timemitter = require('timemitter').default;
 
-const { apiUrl } = require('./config');
+const { apiUrl, liveUrl } = require('./config');
 
 const [$vLocal, $rStart, $rStop] = document.querySelectorAll('button');
 const [$video] = document.querySelectorAll('video');
@@ -57,7 +57,10 @@ function onClickRecordStart() {
     if (needFinalize === false) { return; }
 
     console.log('finalize', liveId);
-    fetch(`${apiUrl}/finalize/${liveId}`);
+    fetch(`${apiUrl}/finalize/${liveId}`)
+      .then(() => {
+        console.log(`${liveUrl}/${liveId}/1.ts`);
+      });
   };
 
   console.log('initialize', liveId);
