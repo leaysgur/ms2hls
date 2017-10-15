@@ -1,4 +1,1 @@
-const serverUrl = '//localhost:9999';
-
-export const apiUrl = `${serverUrl}/api`;
-export const liveUrl = `${serverUrl}/live`;
+export const serverUrl = '//localhost:9999';

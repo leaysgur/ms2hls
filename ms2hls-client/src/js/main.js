@@ -1,7 +1,7 @@
 const uuid = require('uuid/v4');
 const Timemitter = require('timemitter').default;
 
-const { apiUrl, liveUrl } = require('./config');
+const { serverUrl } = require('./config');
 
 const [$vLocal, $rStart, $rStop] = document.querySelectorAll('button');
 const [$video] = document.querySelectorAll('video');
@@ -47,7 +47,7 @@ function onClickRecordStart() {
 
     chunkCnt++;
 
-    fetch(`${apiUrl}/chunks/${liveId}`, {
+    fetch(`${serverUrl}/api/chunks/${liveId}`, {
       method: 'post',
       body: payload,
     });
@@ -57,14 +57,14 @@ function onClickRecordStart() {
     if (needFinalize === false) { return; }
 
     console.log('finalize', liveId);
-    fetch(`${apiUrl}/finalize/${liveId}`)
+    fetch(`${serverUrl}/api/finalize/${liveId}`)
       .then(() => {
-        console.log(`${liveUrl}/${liveId}/1.ts`);
+        console.log(`${serverUrl}/live/${liveId}/1.ts`);
       });
   };
 
   console.log('initialize', liveId);
-  fetch(`${apiUrl}/initialize/${liveId}`)
+  fetch(`${serverUrl}/api/initialize/${liveId}`)
     .then(() => {
       recorder.start();
       emitter.start();
