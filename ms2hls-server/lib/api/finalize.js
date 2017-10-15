@@ -7,5 +7,7 @@ module.exports = async function(request, reply) {
   const dirPath = path.join(__dirname, '../..', 'chunks', liveId);
   dirPath;
 
+  // TODO: make .m3u8
+
   reply.code(200).send();
 };
