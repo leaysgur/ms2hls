@@ -10,33 +10,6 @@ let recorder = null;
 let liveId = '';
 
 const emitter = new Timemitter();
-emitter
-  .at(0, () => {
-    recorder = new MediaRecorder($video.srcObject);
-
-    // called only once at stop(), ondataavailable -> onstop
-    recorder.ondataavailable = ev => {
-      const blob = new Blob([ev.data], { type: recorder.mimeType });
-
-      const payload = new FormData();
-      payload.append('webm', blob, `${Date.now()}.webm`);
-
-      fetch(`${apiUrl}/chunks/${liveId}`, {
-        method: 'post',
-        body: payload,
-      });
-    };
-
-    recorder.start();
-
-    liveId = uuid();
-    fetch(`${apiUrl}/initialize/${liveId}`);
-  })
-  .every(4, time => {
-    console.log('TODO: send chunk', time, liveId);
-    recorder.stop();
-    recorder.start();
-  });
 
 $vLocal.onclick = () => {
   navigator.mediaDevices.getUserMedia({ video: true })
@@ -50,7 +23,37 @@ $vLocal.onclick = () => {
 };
 
 $rStart.onclick = () => {
-  emitter.start();
+  emitter
+    .at(0, () => {
+      recorder = new MediaRecorder($video.srcObject);
+
+      // called only once at stop(), ondataavailable -> onstop
+      recorder.ondataavailable = ev => {
+        const blob = new Blob([ev.data], { type: recorder.mimeType });
+
+        const payload = new FormData();
+        payload.append('webm', blob, `${Date.now()}.webm`);
+
+        fetch(`${apiUrl}/chunks/${liveId}`, {
+          method: 'post',
+          body: payload,
+        });
+      };
+
+      recorder.start();
+
+      liveId = uuid();
+      fetch(`${apiUrl}/initialize/${liveId}`);
+
+      console.log('initialize', liveId);
+    })
+    .every(4, time => {
+      recorder.stop();
+      recorder.start();
+
+      console.log('send chunk', time, liveId);
+    })
+    .start();
 
   $rStart.disabled = true;
   $rStop.disabled = false;
@@ -60,6 +63,9 @@ $rStop.onclick = () => {
   // send last one manually
   recorder.stop();
   emitter.destroy();
+
+  fetch(`${apiUrl}/finalize/${liveId}`);
+  console.log('finalize', liveId);
 
   $rStart.disabled = false;
   $rStop.disabled = true;
