@@ -2,10 +2,9 @@
   "name": "ms2hls-server",
   "version": "1.0.0",
   "description": "MediaStream to HLS via MediaRecorder and ffmpeg.",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon ./server"
+    "start": "nodemon ./lib"
   },
   "repository": {
     "type": "git",
@@ -22,6 +21,7 @@
     "cors": "^2.8.4",
     "fastify": "^0.30.1",
     "fastify-multipart": "^0.2.0",
+    "fluent-ffmpeg": "^2.1.2",
     "pump": "^1.0.2"
   },
   "devDependencies": {
