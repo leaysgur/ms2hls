@@ -21,6 +21,7 @@
     "cors": "^2.8.4",
     "fastify": "^0.30.1",
     "fastify-multipart": "^0.2.0",
+    "fastify-static": "^0.2.1",
     "fluent-ffmpeg": "^2.1.2",
     "pump": "^1.0.2"
   },

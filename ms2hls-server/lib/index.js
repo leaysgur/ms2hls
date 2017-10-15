@@ -1,8 +1,13 @@
+const path = require('path');
 const fastify = require('fastify')({
   logger: process.env.NODE_ENV !== 'production',
 });
 
 fastify.register(require('fastify-multipart'));
+fastify.register(require('fastify-static'), {
+  root: path.join(__dirname, '..', 'chunks'),
+  prefix: '/live/',
+});
 fastify.use(require('cors')());
 
 fastify.register(require('./api'), { prefix: '/api' });
