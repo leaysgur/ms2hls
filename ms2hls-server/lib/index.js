@@ -5,7 +5,7 @@ const fastify = require('fastify')({
 fastify.register(require('fastify-multipart'));
 fastify.use(require('cors')());
 
-fastify.register(require('./routes'), { prefix: '/api' });
+fastify.register(require('./api'), { prefix: '/api' });
 
 fastify.listen(process.env.PORT || 9999, err => {
   if (err) { throw err; }
