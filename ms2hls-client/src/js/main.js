@@ -1,21 +1,41 @@
+const uuid = require('uuid/v4');
 const Timemitter = require('timemitter').default;
 
 const [$vLocal, $rStart, $rStop] = document.querySelectorAll('button');
 const [$video] = document.querySelectorAll('video');
 
-const apiUrl = '//localhost/api';
+const apiUrl = '//localhost:9999/api';
 
 let recorder = null;
-let chunks = [];
+let liveId = '';
 
 const emitter = new Timemitter();
 emitter
   .at(0, () => {
-    console.log('TODO: create chunk dir');
-    // fetch(`${apiUrl}/init?id=`, {});
+    recorder = new MediaRecorder($video.srcObject);
+
+    // called only once at stop(), ondataavailable -> onstop
+    recorder.ondataavailable = ev => {
+      const blob = new Blob([ev.data], { type: recorder.mimeType });
+
+      const payload = new FormData();
+      payload.append('webm', blob, `${Date.now()}.webm`);
+
+      fetch(`${apiUrl}/chunks`, {
+        method: 'post',
+        body: payload,
+      });
+    };
+
+    recorder.start();
+
+    liveId = uuid();
+    fetch(`${apiUrl}/initialize?id=${liveId}`);
   })
   .every(4, time => {
-    console.log('TODO: send chunk', time);
+    console.log('TODO: send chunk', time, liveId);
+    recorder.stop();
+    recorder.start();
   });
 
 $vLocal.onclick = () => {
@@ -30,41 +50,14 @@ $vLocal.onclick = () => {
 };
 
 $rStart.onclick = () => {
-  recorder = new MediaRecorder($video.srcObject);
-
   emitter.start();
-
-  chunks = [];
-
-  recorder.ondataavailable = ev => {
-    chunks.push(ev.data);
-  };
-
-  recorder.onstop = () => {
-    const blob = new Blob(chunks, { type: recorder.mimeType });
-
-    const payload = new FormData();
-    payload.append('webm', blob, '1.webm');
-
-    fetch(`${apiUrl}/chunks`, {
-      method: 'post',
-      body: payload,
-    })
-      .then(() => {
-        chunks = [];
-        recorder = null;
-      });
-
-    console.log('TODO: send chunk manually');
-  };
-
-  recorder.start();
 
   $rStart.disabled = true;
   $rStop.disabled = false;
 };
 
 $rStop.onclick = () => {
+  // send last one manually
   recorder.stop();
   emitter.destroy();
 
