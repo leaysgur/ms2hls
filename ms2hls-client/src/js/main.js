@@ -8,9 +8,17 @@ const [$video] = document.querySelectorAll('video');
 
 let recorder = null;
 let chunkCnt = 1;
+let needFinalize = false;
 
 const liveId = uuid();
 const emitter = new Timemitter();
+emitter
+  .every(4, time => {
+    recorder.stop();
+    recorder.start();
+
+    console.log('send chunk', time, liveId);
+  });
 
 $vLocal.onclick = onClickLocalStream;
 $rStart.onclick = onClickRecordStart;
@@ -28,50 +36,47 @@ function onClickLocalStream() {
 }
 
 function onClickRecordStart() {
-  emitter
-    .at(0, () => {
-      recorder = new MediaRecorder($video.srcObject);
+  recorder = new MediaRecorder($video.srcObject);
 
-      // called only once at stop(), ondataavailable -> onstop
-      recorder.ondataavailable = ev => {
-        const blob = new Blob([ev.data], { type: recorder.mimeType });
+  // called only once at stop(), ondataavailable -> onstop
+  recorder.ondataavailable = ev => {
+    const blob = new Blob([ev.data], { type: recorder.mimeType });
 
-        const payload = new FormData();
-        payload.append('webm', blob, `${chunkCnt}.webm`);
+    const payload = new FormData();
+    payload.append('webm', blob, `${chunkCnt}.webm`);
 
-        chunkCnt++;
+    chunkCnt++;
 
-        fetch(`${apiUrl}/chunks/${liveId}`, {
-          method: 'post',
-          body: payload,
-        });
-      };
+    fetch(`${apiUrl}/chunks/${liveId}`, {
+      method: 'post',
+      body: payload,
+    });
+  };
 
+  recorder.onstop = () => {
+    if (needFinalize === false) { return; }
+
+    console.log('finalize', liveId);
+    fetch(`${apiUrl}/finalize/${liveId}`);
+  };
+
+  console.log('initialize', liveId);
+  fetch(`${apiUrl}/initialize/${liveId}`)
+    .then(() => {
       recorder.start();
-
-      fetch(`${apiUrl}/initialize/${liveId}`);
-
-      console.log('initialize', liveId);
-    })
-    .every(4, time => {
-      recorder.stop();
-      recorder.start();
-
-      console.log('send chunk', time, liveId);
-    })
-    .start();
+      emitter.start();
+    });
 
   $rStart.disabled = true;
   $rStop.disabled = false;
 }
 
 function onClickRecordStop() {
+  needFinalize = true;
+
   // send last chunk manually
   recorder.stop();
   emitter.destroy();
-
-  fetch(`${apiUrl}/finalize/${liveId}`);
-  console.log('finalize', liveId);
 
   $rStop.disabled = true;
 }
