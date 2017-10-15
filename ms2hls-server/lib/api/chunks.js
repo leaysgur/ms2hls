@@ -1,7 +1,11 @@
+const { promisify } = require('util');
 const path = require('path');
 const fs = require('fs');
 
 const pump = require('pump');
+const ffmpeg = require('fluent-ffmpeg');
+
+const unlink = promisify(fs.unlink);
 
 module.exports = function(request, reply) {
   const { liveId } = request.params;
@@ -11,9 +15,22 @@ module.exports = function(request, reply) {
       if (field !== 'webm') { return; }
 
       // TODO: fix root path
-      const fileStream = fs.createWriteStream(path.join(__dirname, '../..', 'chunks', liveId, filename));
+      const filePath = path.join(__dirname, '../..', 'chunks', liveId, filename);
+      const fileStream = fs.createWriteStream(filePath);
       pump(file, fileStream, err => {
         if (err) { throw err; }
+
+        ffmpeg()
+          .input(filePath)
+          // TODO: bitrate
+          .videoCodec('libx264')
+          .audioCodec('libfdk_aac')
+          .output(filePath.replace('.webm', '.ts'))
+          .on('error', err => { throw err; })
+          .on('end', () => {
+            unlink(filePath);
+          })
+          .run();
       });
     },
     err => {
