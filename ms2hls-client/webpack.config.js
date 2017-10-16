@@ -3,10 +3,14 @@ const webpack = require('webpack');
 const isProd = process.env.NODE_ENV === 'production';
 
 const config = {
-  entry: './src/js/recorder.js',
+  entry: {
+    recorder: './src/js/recorder/main.js',
+    viewer: './src/js/viewer/main.js',
+    reporter: './src/js/reporter/main.js',
+  },
   output: {
     path: `${__dirname}/public`,
-    filename: 'recorder.bundle.js',
+    filename: '[name].bundle.js',
   },
   plugins: [],
   devServer: {
