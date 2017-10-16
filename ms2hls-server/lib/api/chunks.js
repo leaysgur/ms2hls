@@ -12,17 +12,19 @@ module.exports = function(request, reply) {
       if (field !== 'webm') { return; }
 
       // TODO: fix root path
-      const filePath = path.join(__dirname, '../..', 'chunks', liveId, filename);
-      const fileStream = fs.createWriteStream(filePath);
+      const inputPath = path.join(__dirname, '../..', 'chunks', liveId, filename);
+      const outputPath = path.join(__dirname, '../..', 'live', liveId, filename.replace('.webm', '.ts'));
+
+      const fileStream = fs.createWriteStream(inputPath);
       pump(file, fileStream, err => {
         if (err) { throw err; }
 
         ffmpeg()
-          .input(filePath)
+          .input(inputPath)
           // TODO: bitrate
           .videoCodec('libx264')
           .audioCodec('libfdk_aac')
-          .output(filePath.replace('.webm', '.ts'))
+          .output(outputPath)
           .on('error', err => { throw err; })
           .run();
 

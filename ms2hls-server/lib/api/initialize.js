@@ -7,6 +7,7 @@ module.exports = async function(request, reply) {
 
   // TODO: fix root path
   await mkdir(path.join(__dirname, '../..', 'chunks', liveId));
+  await mkdir(path.join(__dirname, '../..', 'live', liveId));
 
   reply.code(200).send();
 };
