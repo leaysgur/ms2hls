@@ -1,5 +1,6 @@
 const path = require('path');
 
+const { serverPort } = require('./util/config');
 const { mkdir } = require('./util/fs');
 const server = require('./server');
 
@@ -13,7 +14,7 @@ const server = require('./server');
   }
 
   const fastify = server();
-  fastify.listen(process.env.PORT || 9999, err => {
+  fastify.listen(serverPort, err => {
     if (err) { throw err; }
 
     console.log(`Server listening on ${fastify.server.address().port}`);

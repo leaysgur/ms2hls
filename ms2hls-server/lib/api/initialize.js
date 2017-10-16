@@ -1,5 +1,4 @@
-const rootPath = require('../util/root-path');
-
+const { rootPath } = require('../util/config');
 const { mkdir } = require('../util/fs');
 
 module.exports = async function(request, reply) {

@@ -3,7 +3,7 @@ const fs = require('fs');
 const pump = require('pump');
 const ffmpeg = require('fluent-ffmpeg');
 
-const rootPath = require('../util/root-path');
+const { rootPath } = require('../util/config');
 
 module.exports = function(request, reply) {
   const { liveId } = request.params;
