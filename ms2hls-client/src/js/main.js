@@ -59,7 +59,7 @@ function onClickRecordStart() {
     console.log('finalize', liveId);
     fetch(`${serverUrl}/api/finalize/${liveId}`)
       .then(() => {
-        console.log(`${serverUrl}/live/${liveId}/1.ts`);
+        console.log(`${serverUrl}/live/${liveId}/playlist.m3u8`);
       });
   };
 
