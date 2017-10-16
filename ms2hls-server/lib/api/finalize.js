@@ -1,10 +1,9 @@
-const path = require('path');
+const rootPath = require('../util/root-path');
 
 module.exports = async function(request, reply) {
   const { liveId } = request.params;
 
-  // TODO: fix root path
-  const dirPath = path.join(__dirname, '../..', 'chunks', liveId);
+  const dirPath = `${rootPath}/chunks/${liveId}`;
   dirPath;
 
   // TODO: make .m3u8

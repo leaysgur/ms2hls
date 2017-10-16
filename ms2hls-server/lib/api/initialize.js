@@ -1,13 +1,12 @@
-const path = require('path');
+const rootPath = require('../util/root-path');
 
 const { mkdir } = require('../util/fs');
 
 module.exports = async function(request, reply) {
   const { liveId } = request.params;
 
-  // TODO: fix root path
-  await mkdir(path.join(__dirname, '../..', 'chunks', liveId));
-  await mkdir(path.join(__dirname, '../..', 'live', liveId));
+  await mkdir(`${rootPath}/chunks/${liveId}`);
+  await mkdir(`${rootPath}/live/${liveId}`);
 
   reply.code(200).send();
 };

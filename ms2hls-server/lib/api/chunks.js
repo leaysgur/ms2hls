@@ -1,8 +1,9 @@
-const path = require('path');
 const fs = require('fs');
 
 const pump = require('pump');
 const ffmpeg = require('fluent-ffmpeg');
+
+const rootPath = require('../util/root-path');
 
 module.exports = function(request, reply) {
   const { liveId } = request.params;
@@ -11,9 +12,8 @@ module.exports = function(request, reply) {
     (field, file, filename) => {
       if (field !== 'webm') { return; }
 
-      // TODO: fix root path
-      const inputPath = path.join(__dirname, '../..', 'chunks', liveId, filename);
-      const outputPath = path.join(__dirname, '../..', 'live', liveId, filename.replace('.webm', '.ts'));
+      const inputPath = `${rootPath}/chunks/${liveId}/${filename}`;
+      const outputPath = `${rootPath}/live/${liveId}/${filename.replace('.webm', '.ts')}`;
 
       const fileStream = fs.createWriteStream(inputPath);
       pump(file, fileStream, err => {
