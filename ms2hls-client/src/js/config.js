@@ -1,1 +1,5 @@
-export const serverUrl = '//localhost:9999';
+const serverUrl = '//localhost:9999';
+
+module.exports = {
+  serverUrl,
+};
