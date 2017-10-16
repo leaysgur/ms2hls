@@ -1,7 +1,7 @@
 const path = require('path');
 
 const { mkdir } = require('./util/fs');
-const createServer = require('./create-server');
+const server = require('./server');
 
 (async function main() {
   try {
@@ -12,7 +12,7 @@ const createServer = require('./create-server');
     err;
   }
 
-  const fastify = createServer();
+  const fastify = server();
   fastify.listen(process.env.PORT || 9999, err => {
     if (err) { throw err; }
 
