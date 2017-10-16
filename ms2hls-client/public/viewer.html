@@ -3,17 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <title>MediaStream2HttpLiveStreaming Viewer</title>
+  <meta name="viewport" content="width=device-width">
   <link rel="stylesheet" href="./main.css">
 </head>
 <body>
-  <a href="./reporter.html">reporter</a> | <a href="./recorder.html">recorder</a> | viewer
-  <hr>
-  <h3>Watch it</h3>
+  <h3>Viewer</h3>
+  <p>fill out .m3u8 url and play it.</p>
   <video controls></video>
   <div>
     <input type="text" size="80">
-    <button>Play stream</button>
+    <button>Play</button>
   </div>
+
+  <nav>
+    <a href="./reporter.html">reporter</a> | <a href="./recorder.html">recorder</a> | viewer
+  </nav>
 
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <script>

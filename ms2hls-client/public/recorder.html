@@ -3,22 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <title>MediaStream2HttpLiveStreaming Recorder</title>
+  <meta name="viewport" content="width=device-width">
   <link rel="stylesheet" href="./main.css">
 </head>
 <body>
-  <a href="./reporter.html">reporter</a> | recorder | <a href="./viewer.html">viewer</a>
-  <hr>
-  <h3>Get stream</h3>
+  <h3>Recorder</h3>
+  <p>get stream, then record it.</p>
   <video muted></video>
   <div>
-    <button>Use local stream</button>
-    <button>Use remote stream</button>
+    <button>Get local stream</button>
+    <button>Get remote stream</button>
+    <button disabled>Start recording</button>
+    <button disabled>Stop recording</button>
   </div>
-  <h3>Record it</h3>
-  <div>
-    <button disabled>Start</button>
-    <button disabled>Stop</button>
-  </div>
+
+  <nav>
+    <a href="./reporter.html">reporter</a> | recorder | <a href="./viewer.html">viewer</a>
+  </nav>
 
   <script src="https://cdn.webrtc.ecl.ntt.com/skyway-1.0.1.js"></script>
   <script src="./recorder.bundle.js"></script>
