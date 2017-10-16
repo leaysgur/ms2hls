@@ -15,14 +15,19 @@ ${serverUrl}/live/${liveId}/chunklist-1.m3u8
 
 const writeChunklist = async function(liveId) {
   // check /chunks, not /live
-  const tsFiles = await readdir(`${rootPath}/chunks/${liveId}`);
+  const files = await readdir(`${rootPath}/chunks/${liveId}`);
+  const sortedFiles = files.sort((a, b) => {
+    const aNo = parseInt(a);
+    const bNo = parseInt(b);
+    return aNo - bNo;
+  });
 
   const chunklist = `
 #EXTM3U
 #EXT-X-VERSION:3
 #EXT-X-TARGETDURATION:4
 #EXT-X-MEDIA-SEQUENCE:1
-${tsFiles.map(file => `
+${sortedFiles.map(file => `
 #EXTINF:4.0,
 ${serverUrl}/live/${liveId}/${file.replace('.webm', '.ts')}
 `.trim()).join('\n')}
