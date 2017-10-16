@@ -4,7 +4,10 @@ module.exports = async function(request, reply) {
   const { liveId } = request.params;
 
   await writePlaylist(liveId);
-  await writeChunklist(liveId);
 
-  reply.code(200).send();
+  // XXX: wait until last .ts generated
+  setTimeout(() => {
+    writeChunklist(liveId);
+    reply.code(200).send();
+  }, 2000);
 };

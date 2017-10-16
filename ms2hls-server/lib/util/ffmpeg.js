@@ -19,6 +19,19 @@ const webm2ts = function(inputPath, liveId, filename) {
   });
 };
 
+const tsDuration = function(inputPath) {
+  return new Promise((resolve, reject) => {
+    ffmpeg.ffprobe(inputPath, (err, metadata) => {
+      if (err) {
+        return reject(err);
+      }
+
+      resolve(metadata.format.duration);
+    });
+  });
+};
+
 module.exports = {
   webm2ts,
+  tsDuration,
 };
