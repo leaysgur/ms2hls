@@ -33,7 +33,6 @@ function onClickLocalStream() {
   navigator.mediaDevices.getUserMedia({
     video: true,
     audio: true,
-    fake: true,
   })
     .then(stream => {
       $video.srcObject = stream;
