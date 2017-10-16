@@ -21,7 +21,7 @@ emitter
   });
 const peer = new window.Peer('ms2hls-recorder', {
   key: '84197755-72ad-4e5a-834b-7556de52ed6b',
-  debug: 3,
+  // debug: 3,
 });
 
 $vLocal.onclick = onClickLocalStream;

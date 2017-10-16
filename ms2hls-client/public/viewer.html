@@ -21,9 +21,6 @@
     const $streamUrl = document.querySelector('input');
     const $playBtn = document.querySelector('button');
 
-    const hls = new Hls();
-    hls.attachMedia($video);
-
     $playBtn.onclick = () => {
       const url = $streamUrl.value;
 
@@ -32,11 +29,32 @@
         return;
       }
 
+      const play = isSafari() ? playHLS : playHLSjs;
+      play(url, $video);
+    };
+
+    function playHLSjs(url, $video) {
+      const hls = new Hls();
+      hls.attachMedia($video);
+
       hls.loadSource(url);
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
         $video.play();
       });
-    };
+    }
+
+    function playHLS(url, $video) {
+      $video.src = url;
+      $video.play();
+    }
+
+    function isSafari() {
+      const { userAgent } = navigator
+      const chrome = userAgent.indexOf('Chrome') > -1
+      const safari = userAgent.indexOf('Safari') > -1
+
+      return chrome === false && safari
+    }
   </script>
 </body>
 </html>
