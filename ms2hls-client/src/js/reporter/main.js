@@ -7,6 +7,7 @@ const peer = new window.Peer('ms2hls-reporter', {
 navigator.mediaDevices.getUserMedia({
   video: {
     facingMode: 'environment',
+    width: 1280,
   },
   audio: true
 })
