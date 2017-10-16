@@ -1,10 +1,10 @@
-const { writePlaylist } = require('../util/hls');
+const { writePlaylist, writeChunklist } = require('../util/hls');
 
 module.exports = async function(request, reply) {
   const { liveId } = request.params;
 
-  // TODO: make .m3u8
   await writePlaylist(liveId);
+  await writeChunklist(liveId);
 
   reply.code(200).send();
 };
