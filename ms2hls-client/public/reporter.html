@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>MediaStream2HttpLiveStreaming Reporter</title>
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="./main.css">
+</head>
+<body>
+  reporter | <a href="./recorder.html">recorder</a> | <a href="./viewer.html">viewer</a>
+  <hr>
+  <h3>Report it</h3>
+  <video playsinline></video>
+  <div>
+    <button>Report stream</button>
+  </div>
+
+  <script src="https://cdn.webrtc.ecl.ntt.com/skyway-1.0.1.js"></script>
+  <script>
+    const $video = document.querySelector('video');
+    const peer = new window.Peer('ms2hls-reporter', {
+      key: '84197755-72ad-4e5a-834b-7556de52ed6b',
+      debug: 3,
+    });
+
+    navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { exact : 'environment' } }, audio: true
+    })
+      .then(stream => {
+        $video.srcObject = stream;
+        $video.play();
+      });
+
+    peer.on('open', () => {
+      peer.on('call', conn => {
+        conn.answer($video.srcObject);
+      });
+    });
+  </script>
+</body>
+</html>

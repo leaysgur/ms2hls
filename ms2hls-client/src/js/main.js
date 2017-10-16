@@ -3,7 +3,7 @@ const Timemitter = require('timemitter').default;
 
 const { serverUrl } = require('./config');
 
-const [$vLocal, $rStart, $rStop] = document.querySelectorAll('button');
+const [$vLocal, $vRemote, $rStart, $rStop] = document.querySelectorAll('button');
 const [$video] = document.querySelectorAll('video');
 
 let recorder = null;
@@ -19,8 +19,13 @@ emitter
 
     console.log('send chunk', time, liveId);
   });
+const peer = new window.Peer('ms2hls-recorder', {
+  key: '84197755-72ad-4e5a-834b-7556de52ed6b',
+  debug: 3,
+});
 
 $vLocal.onclick = onClickLocalStream;
+$vRemote.onclick = onClickRemoteStream;
 $rStart.onclick = onClickRecordStart;
 $rStop.onclick = onClickRecordStop;
 
@@ -31,8 +36,22 @@ function onClickLocalStream() {
       $video.play();
 
       $vLocal.disabled = true;
+      $vRemote.disabled = true;
       $rStart.disabled = false;
     });
+}
+
+function onClickRemoteStream() {
+  const conn = peer.call('ms2hls-reporter');
+
+  conn.on('stream', stream => {
+    $video.srcObject = stream;
+    $video.play();
+
+    $vLocal.disabled = true;
+    $vRemote.disabled = true;
+    $rStart.disabled = false;
+  });
 }
 
 function onClickRecordStart() {

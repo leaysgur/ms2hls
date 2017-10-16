@@ -13,6 +13,7 @@ const config = {
     contentBase: `${__dirname}/public`,
     compress: true,
     watchContentBase: true,
+    host: '0.0.0.0',
     port: 9000,
   }
 };
