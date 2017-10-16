@@ -31,7 +31,7 @@ $rStop.onclick = onClickRecordStop;
 
 function onClickLocalStream() {
   navigator.mediaDevices.getUserMedia({
-    video:{ width: 1280 },
+    video: true,
     audio: true,
   })
     .then(stream => {
