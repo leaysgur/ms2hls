@@ -25,7 +25,7 @@ $rStart.onclick = onClickRecordStart;
 $rStop.onclick = onClickRecordStop;
 
 function onClickLocalStream() {
-  navigator.mediaDevices.getUserMedia({ video: true })
+  navigator.mediaDevices.getUserMedia({ video: true, audio: true })
     .then(stream => {
       $video.srcObject = stream;
       $video.play();
