@@ -1,22 +1,24 @@
 const path = require('path');
-const fastify = require('fastify')({
-  logger: process.env.NODE_ENV !== 'production',
-});
 
-fastify.register(require('fastify-multipart'));
-fastify.register(require('fastify-static'), {
-  root: path.join(__dirname, '..', 'chunks'),
-  prefix: '/live/',
-});
-fastify.use(require('cors')());
+const { mkdir } = require('./util/fs');
+const createServer = require('./create-server');
 
-fastify.register(require('./api'), { prefix: '/api' });
+(async function main() {
+  try {
+    await mkdir(path.join(__dirname, '..', 'chunks'));
+    await mkdir(path.join(__dirname, '..', 'live'));
+  } catch (err) {
+    // do nothing for dir already exists
+    err;
+  }
 
-fastify.listen(process.env.PORT || 9999, err => {
-  if (err) { throw err; }
+  const fastify = createServer();
+  fastify.listen(process.env.PORT || 9999, err => {
+    if (err) { throw err; }
 
-  console.log(`Server listening on ${fastify.server.address().port}`);
-});
+    console.log(`Server listening on ${fastify.server.address().port}`);
+  });
+}());
 
 process.on('uncaughtException', err => {
   console.error(err);
