@@ -15,8 +15,7 @@ ${serverUrl}/live/${liveId}/chunklist-1.m3u8
 };
 
 const writeChunklist = async function(liveId) {
-  // XXX: ideally, should check /live
-  // but check /chunks beacuse /live/xxx/.ts delayed
+  // check /chunks beacuse /live/xxx/.ts delayed
   const files = await readdir(`${rootPath}/chunks/${liveId}`);
   const sortedFiles = files
     .sort((a, b) => {
@@ -25,6 +24,13 @@ const writeChunklist = async function(liveId) {
       return aNo - bNo;
     })
     .map(file => `${serverUrl}/live/${liveId}/${file.replace('.webm', '.ts')}`);
+
+  // but we need to ensure all .ts files exist
+  const tsFiles = await readdir(`${rootPath}/live/${liveId}`);
+  // 1 for playlist.m3u8
+  if (files.length !== tsFiles.length - 1) {
+    console.error('.ts is missing, maybe last one.');
+  }
 
   const fileDurations = await Promise.all(sortedFiles.map(file => tsDuration(file)));
 

@@ -12,11 +12,7 @@ module.exports = async function(request, reply) {
   processingIds.add(liveId);
 
   await writePlaylist(liveId);
+  await writeChunklist(liveId);
 
-  // XXX: wait until last .ts generated
-  setTimeout(() => {
-    // then make manifest w/ ffprobe
-    writeChunklist(liveId);
-    reply.code(200).send();
-  }, 4000); // for 640x480
+  reply.code(200).send();
 };
