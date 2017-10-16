@@ -32,7 +32,7 @@ const writeChunklist = async function(liveId) {
 #EXTM3U
 #EXT-X-VERSION:3
 #EXT-X-MEDIA-SEQUENCE:0
-#EXT-X-TARGETDURATION:10
+#EXT-X-TARGETDURATION:5
 #EXT-X-PLAYLIST-TYPE:VOD
 ${sortedFiles.map((file, idx) => `
 #EXTINF:${fileDurations[idx]},

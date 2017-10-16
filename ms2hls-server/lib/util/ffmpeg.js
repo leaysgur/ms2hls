@@ -8,10 +8,15 @@ const webm2ts = function(inputPath, liveId, filename) {
   return new Promise((resolve, reject) => {
     ffmpeg()
       .input(inputPath)
-      // TODO: bitrate
       .videoCodec('libx264')
       .audioCodec('libfdk_aac')
+      .audioChannels(2)
       .format('mpegts')
+      .outputOptions([
+        '-profile:v baseline',
+        '-strict experimental',
+        '-mpegts_copyts 1',
+      ])
       .output(outputPath)
       .on('error', err => reject(err))
       .on('end', () => resolve())
