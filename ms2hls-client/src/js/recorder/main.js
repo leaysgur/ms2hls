@@ -13,7 +13,7 @@ let needFinalize = false;
 const liveId = uuid();
 const emitter = new Timemitter();
 emitter
-  .every(4, time => {
+  .every(9, time => {
     recorder.stop();
     recorder.start();
 
@@ -31,11 +31,9 @@ $rStop.onclick = onClickRecordStop;
 
 function onClickLocalStream() {
   navigator.mediaDevices.getUserMedia({
-    video: {
-      width: 480,
-      height: 640,
-    },
-    audio: true
+    video: true,
+    audio: true,
+    fake: true,
   })
     .then(stream => {
       $video.srcObject = stream;
