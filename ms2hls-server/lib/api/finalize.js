@@ -7,7 +7,8 @@ module.exports = async function(request, reply) {
 
   // XXX: wait until last .ts generated
   setTimeout(() => {
+    // then make manifest w/ ffprobe
     writeChunklist(liveId);
     reply.code(200).send();
-  }, 2000);
+  }, 4000); // for 640x480
 };

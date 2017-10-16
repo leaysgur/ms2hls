@@ -13,8 +13,6 @@ const webm2ts = function(inputPath, liveId, filename) {
       .audioChannels(2)
       .format('mpegts')
       .outputOptions([
-        '-profile:v baseline',
-        '-strict experimental',
         '-mpegts_copyts 1',
       ])
       .output(outputPath)
