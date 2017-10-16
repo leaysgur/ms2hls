@@ -1,7 +1,7 @@
 const uuid = require('uuid/v4');
 const Timemitter = require('timemitter').default;
 
-const { serverUrl } = require('./config');
+const { serverUrl, chunkInterval } = require('./config');
 
 const [$vLocal, $vRemote, $rStart, $rStop] = document.querySelectorAll('button');
 const [$video] = document.querySelectorAll('video');
@@ -13,7 +13,7 @@ let needFinalize = false;
 const liveId = uuid();
 const emitter = new Timemitter();
 emitter
-  .every(4, time => {
+  .every(chunkInterval / 1000, time => {
     recorder.stop();
     recorder.start();
 
@@ -80,11 +80,13 @@ function onClickRecordStart() {
   recorder.onstop = () => {
     if (needFinalize === false) { return; }
 
-    console.log('finalize', liveId);
-    fetch(`${serverUrl}/api/finalize/${liveId}`)
-      .then(() => {
-        console.log(`${serverUrl}/live/${liveId}/playlist.m3u8`);
-      });
+    console.log('send last chunk', liveId);
+    setTimeout(() => {
+      fetch(`${serverUrl}/api/finalize/${liveId}`)
+        .then(() => {
+          console.log(`${serverUrl}/live/${liveId}/playlist.m3u8`);
+        });
+    }, chunkInterval);
   };
 
   console.log('initialize', liveId);
