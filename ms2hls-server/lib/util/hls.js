@@ -25,7 +25,7 @@ const writeChunklist = async function(liveId) {
   const chunklist = `
 #EXTM3U
 #EXT-X-VERSION:3
-#EXT-X-TARGETDURATION:4
+#EXT-X-TARGETDURATION:5
 #EXT-X-PLAYLIST-TYPE:VOD
 #EXT-X-MEDIA-SEQUENCE:0
 ${sortedFiles.map(file => `

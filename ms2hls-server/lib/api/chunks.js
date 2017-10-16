@@ -1,9 +1,9 @@
 const fs = require('fs');
 
 const pump = require('pump');
-const ffmpeg = require('fluent-ffmpeg');
 
 const { rootPath } = require('../util/config');
+const { webm2ts } = require('../util/ffmpeg');
 
 module.exports = function(request, reply) {
   const { liveId } = request.params;
@@ -13,20 +13,13 @@ module.exports = function(request, reply) {
       if (field !== 'webm') { return; }
 
       const inputPath = `${rootPath}/chunks/${liveId}/${filename}`;
-      const outputPath = `${rootPath}/live/${liveId}/${filename.replace('.webm', '.ts')}`;
 
       const fileStream = fs.createWriteStream(inputPath);
       pump(file, fileStream, err => {
         if (err) { throw err; }
 
-        ffmpeg()
-          .input(inputPath)
-          // TODO: bitrate
-          .videoCodec('libx264')
-          .audioCodec('libfdk_aac')
-          .output(outputPath)
-          .on('error', err => { throw err; })
-          .run();
+        // async
+        webm2ts(inputPath, liveId, filename);
 
         reply.code(200).send();
       });
