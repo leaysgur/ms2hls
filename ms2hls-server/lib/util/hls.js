@@ -26,11 +26,13 @@ const writeChunklist = async function(liveId) {
 #EXTM3U
 #EXT-X-VERSION:3
 #EXT-X-TARGETDURATION:4
-#EXT-X-MEDIA-SEQUENCE:1
+#EXT-X-PLAYLIST-TYPE:VOD
+#EXT-X-MEDIA-SEQUENCE:0
 ${sortedFiles.map(file => `
 #EXTINF:4.0,
 ${serverUrl}/live/${liveId}/${file.replace('.webm', '.ts')}
 `.trim()).join('\n')}
+#EXT-X-ENDLIST
   `.trim();
 
   return writeFile(`${rootPath}/live/${liveId}/chunklist-1.m3u8`, chunklist);
