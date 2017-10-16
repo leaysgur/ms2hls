@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>MediaStream2HttpLiveStreaming Viewer</title>
+  <link rel="stylesheet" href="./main.css">
+</head>
+<body>
+  <a href="./recorder.html">recorder</a> | viewer
+  <hr>
+  <h3>Watch it</h3>
+  <video controls></video>
+  <div>
+    <input type="text" size="80">
+    <button>Play stream</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script>
+    const $video = document.querySelector('video');
+    const $streamUrl = document.querySelector('input');
+    const $playBtn = document.querySelector('button');
+
+    const hls = new Hls();
+    hls.attachMedia($video);
+
+    $playBtn.onclick = () => {
+      const url = $streamUrl.value;
+
+      if (!url) {
+        console.error('url is empty!');
+        return;
+      }
+
+      hls.loadSource(url);
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        $video.play();
+      });
+    };
+  </script>
+</body>
+</html>
