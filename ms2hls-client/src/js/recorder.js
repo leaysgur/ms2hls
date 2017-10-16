@@ -34,6 +34,7 @@ function onClickLocalStream() {
     .then(stream => {
       $video.srcObject = stream;
       $video.play();
+      $video.srcObject.getTracks().forEach(track => console.log(track.getSettings()));
 
       $vLocal.disabled = true;
       $vRemote.disabled = true;
@@ -47,6 +48,7 @@ function onClickRemoteStream() {
   conn.on('stream', stream => {
     $video.srcObject = stream;
     $video.play();
+    $video.srcObject.getTracks().forEach(track => console.log(track.getSettings()));
 
     $vLocal.disabled = true;
     $vRemote.disabled = true;

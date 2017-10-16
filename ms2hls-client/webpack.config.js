@@ -3,10 +3,10 @@ const webpack = require('webpack');
 const isProd = process.env.NODE_ENV === 'production';
 
 const config = {
-  entry: './src/js/main.js',
+  entry: './src/js/recorder.js',
   output: {
     path: `${__dirname}/public`,
-    filename: 'main.bundle.js',
+    filename: 'recorder.bundle.js',
   },
   plugins: [],
   devServer: {

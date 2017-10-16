@@ -11,9 +11,6 @@
   <hr>
   <h3>Report it</h3>
   <video playsinline></video>
-  <div>
-    <button>Report stream</button>
-  </div>
 
   <script src="https://cdn.webrtc.ecl.ntt.com/skyway-1.0.1.js"></script>
   <script>
@@ -24,11 +21,15 @@
     });
 
     navigator.mediaDevices.getUserMedia({
-      video: { facingMode: { exact : 'environment' } }, audio: true
+      video: {
+        facingMode: { exact: 'environment' },
+      },
+      audio: true
     })
       .then(stream => {
         $video.srcObject = stream;
         $video.play();
+        $video.srcObject.getTracks().forEach(track => console.log(track.getSettings()));
       });
 
     peer.on('open', () => {
