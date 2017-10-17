@@ -70,7 +70,7 @@
 const uuid = __webpack_require__(1);
 const Timemitter = __webpack_require__(5).default;
 
-const { serverUrl } = __webpack_require__(6);
+const { serverUrl, chunkInterval } = __webpack_require__(6);
 
 const [$vLocal, $vRemote, $rStart, $rStop] = document.querySelectorAll('button');
 const [$video] = document.querySelectorAll('video');
@@ -82,7 +82,7 @@ let needFinalize = false;
 const liveId = uuid();
 const emitter = new Timemitter();
 emitter
-  .every(4, time => {
+  .every(chunkInterval / 1000, time => {
     recorder.stop();
     recorder.start();
 
@@ -100,11 +100,8 @@ $rStop.onclick = onClickRecordStop;
 
 function onClickLocalStream() {
   navigator.mediaDevices.getUserMedia({
-    video: {
-      width: 480,
-      height: 640,
-    },
-    audio: true
+    video: true,
+    audio: true,
   })
     .then(stream => {
       $video.srcObject = stream;
@@ -152,11 +149,15 @@ function onClickRecordStart() {
   recorder.onstop = () => {
     if (needFinalize === false) { return; }
 
-    console.log('finalize', liveId);
-    fetch(`${serverUrl}/api/finalize/${liveId}`)
-      .then(() => {
-        console.log(`${serverUrl}/live/${liveId}/playlist.m3u8`);
-      });
+    console.log('send last chunk', liveId);
+
+    console.log('finalize...', liveId);
+    setTimeout(() => {
+      fetch(`${serverUrl}/api/finalize/${liveId}`)
+        .then(() => {
+          console.log(`${serverUrl}/live/${liveId}/playlist.m3u8`);
+        });
+    }, chunkInterval);
   };
 
   console.log('initialize', liveId);
@@ -431,8 +432,11 @@ class TimeEmitter {
 // const serverUrl = 'http://localhost:9999';
 const serverUrl = 'http://192.168.100.25:9999';
 
+const chunkInterval = 4000;
+
 module.exports = {
   serverUrl,
+  chunkInterval,
 };
 
 
