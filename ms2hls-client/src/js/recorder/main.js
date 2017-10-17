@@ -81,6 +81,8 @@ function onClickRecordStart() {
     if (needFinalize === false) { return; }
 
     console.log('send last chunk', liveId);
+
+    console.log('finalize...', liveId);
     setTimeout(() => {
       fetch(`${serverUrl}/api/finalize/${liveId}`)
         .then(() => {
