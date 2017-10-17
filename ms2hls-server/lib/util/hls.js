@@ -13,13 +13,6 @@ const writePlaylist = async function(liveId) {
     })
     .map(file => `${serverUrl}/live/${liveId}/${file.replace('.webm', '.ts')}`);
 
-  // but we need to ensure all .ts files exist
-  const tsFiles = await readdir(`${rootPath}/live/${liveId}`);
-  // 1 for playlist.m3u8
-  if (files.length !== tsFiles.length - 1) {
-    console.error('.ts is missing, maybe last one.');
-  }
-
   const chunklist = `
 #EXTM3U
 #EXT-X-VERSION:3
