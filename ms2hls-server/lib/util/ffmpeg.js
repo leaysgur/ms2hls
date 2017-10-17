@@ -17,7 +17,7 @@ const webm2ts = function(inputPath, liveId, filename) {
       ])
       .output(outputPath)
       .on('error', err => reject(err))
-      .on('end', () => resolve())
+      .on('end', () => resolve(outputPath))
       .run();
   });
 };

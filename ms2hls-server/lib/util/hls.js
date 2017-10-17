@@ -1,6 +1,6 @@
 const { writeFile, readdir } = require('./fs');
 const { rootPath, serverUrl } = require('./config');
-const { tsDuration } = require('./ffmpeg');
+const { durations } = require('./state');
 
 const writePlaylist = function(liveId) {
   // TODO: bandwidth / resolution / another levels...
@@ -32,8 +32,6 @@ const writeChunklist = async function(liveId) {
     console.error('.ts is missing, maybe last one.');
   }
 
-  const fileDurations = await Promise.all(sortedFiles.map(file => tsDuration(file)));
-
   const chunklist = `
 #EXTM3U
 #EXT-X-VERSION:3
@@ -41,7 +39,7 @@ const writeChunklist = async function(liveId) {
 #EXT-X-TARGETDURATION:5
 #EXT-X-PLAYLIST-TYPE:VOD
 ${sortedFiles.map((file, idx) => `
-#EXTINF:${fileDurations[idx]},
+#EXTINF:${durations.get(idx + 1)},
 ${file}
 `.trim()).join('\n')}
 #EXT-X-ENDLIST
