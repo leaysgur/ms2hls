@@ -1,6 +1,6 @@
 const { writeFile, readdir } = require('./fs');
 const { rootPath, serverUrl } = require('./config');
-const { durations } = require('./state');
+const { tsDuration } = require('./state');
 
 const writePlaylist = function(liveId) {
   // TODO: bandwidth / resolution / another levels...
@@ -39,7 +39,7 @@ const writeChunklist = async function(liveId) {
 #EXT-X-TARGETDURATION:5
 #EXT-X-PLAYLIST-TYPE:VOD
 ${sortedFiles.map((file, idx) => `
-#EXTINF:${durations.get(idx + 1)},
+#EXTINF:${tsDuration.get(idx + 1)},
 ${file}
 `.trim()).join('\n')}
 #EXT-X-ENDLIST
