@@ -2,7 +2,7 @@ const ffmpeg = require('fluent-ffmpeg');
 
 const { rootPath } = require('./config');
 
-const webm2ts = function(inputPath, liveId, filename) {
+const webmToTs = function(inputPath, liveId, filename) {
   const outputPath = `${rootPath}/live/${liveId}/${filename.replace('.webm', '.ts')}`;
 
   return new Promise((resolve, reject) => {
@@ -22,7 +22,7 @@ const webm2ts = function(inputPath, liveId, filename) {
   });
 };
 
-const tsDuration = function(inputPath) {
+const tsToDuration = function(inputPath) {
   return new Promise((resolve, reject) => {
     ffmpeg.ffprobe(inputPath, (err, metadata) => {
       if (err) {
@@ -35,6 +35,6 @@ const tsDuration = function(inputPath) {
 };
 
 module.exports = {
-  webm2ts,
-  tsDuration,
+  webmToTs,
+  tsToDuration,
 };

@@ -3,7 +3,7 @@ const fs = require('fs');
 const pump = require('pump');
 
 const { rootPath } = require('../util/config');
-const { webm2ts, tsDuration } = require('../util/ffmpeg');
+const { webmToTs, tsToDuration } = require('../util/ffmpeg');
 const { tsDuration } = require('../util/state');
 
 module.exports = function(request, reply) {
@@ -20,8 +20,8 @@ module.exports = function(request, reply) {
         if (err) { throw err; }
 
         // async
-        webm2ts(inputPath, liveId, filename)
-          .then((tsPath) => tsDuration(tsPath))
+        webmToTs(inputPath, liveId, filename)
+          .then((tsPath) => tsToDuration(tsPath))
           .then(duration => tsDuration.set(parseInt(filename), duration));
 
         reply.code(200).send();
