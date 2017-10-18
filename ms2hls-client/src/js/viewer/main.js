@@ -22,6 +22,10 @@ function playHLSjs(url, $video) {
   hls.on(window.Hls.Events.MANIFEST_PARSED, () => {
     $video.play();
   });
+  hls.on(window.Hls.Events.ERROR, (ev, data) => {
+    console.error(ev);
+    console.error(data);
+  });
 }
 
 function playHLS(url, $video) {
